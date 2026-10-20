@@ -1,0 +1,12 @@
+Signed release smoke check, 20 October 2026
+
+APK: songlane-v0.3.0.apk
+Package: app.songlane; version 0.3.0, version code 3
+Minimum SDK 26; target SDK 36
+ABI libraries: arm64-v8a, armeabi-v7a, x86, x86_64
+Not debuggable; dedicated release certificate, APK signature v2/v3 verified.
+Installed successfully on Pixel_7a Android 14 x86_64 emulator.
+First cold am start -W exceeded its observation timeout; the process remained live.
+Subsequent UI hierarchy and screenshot confirmed the rendered home screen, then settings and library.
+Loaded the eight original sound sketches and played Mosslight; the mini player exposed Pause.
+The Android crash log was empty during the check. No physical-phone or auditory quality claim.
