@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="9" failures="0" errors="0" skipped="0" time="430.636" timestamp="2026-10-20T11:03:34" hostname="localhost">
+  <testsuite name="app.songlane.AppFlowTest" tests="1" failures="0" errors="0" skipped="0" time="34.965" timestamp="2026-10-20T11:03:34" hostname="localhost">
+    <properties>
+      <property name="device" value="Pixel_7a(AVD) - 14" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="demoLibraryPlaysAndCompassProducesValidatedRoute" classname="app.songlane.AppFlowTest" time="34.965" />
+  </testsuite>
+  <testsuite name="app.songlane.PlaybackTest" tests="1" failures="0" errors="0" skipped="0" time="388.786" timestamp="2026-10-20T11:03:34" hostname="localhost">
+    <properties>
+      <property name="device" value="Pixel_7a(AVD) - 14" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="mediaBrowserListsLocalLibraryAndPlaybackQueueCanBeMutatedAndPersisted" classname="app.songlane.PlaybackTest" time="388.786" />
+  </testsuite>
+  <testsuite name="app.songlane.StorageTest" tests="7" failures="0" errors="0" skipped="0" time="4.379" timestamp="2026-10-20T11:03:34" hostname="localhost">
+    <properties>
+      <property name="device" value="Pixel_7a(AVD) - 14" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="libraryAndQueueSurviveRepositoryRecreation" classname="app.songlane.StorageTest" time="1.144" />
+    <testcase name="privacySettingAtomicallyClearsQueueAndRejectsStaleSnapshots" classname="app.songlane.StorageTest" time="0.596" />
+    <testcase name="deletionKeepsAudioButRemovesReferences" classname="app.songlane.StorageTest" time="0.423" />
+    <testcase name="privateSessionsAndPausedHistoryDoNotRecord" classname="app.songlane.StorageTest" time="0.762" />
+    <testcase name="unsupportedAndOversizedImportsFailWithoutMutatingState" classname="app.songlane.StorageTest" time="0.983" />
+    <testcase name="keystoreEncryptsRoundTripsAndDeletesKey" classname="app.songlane.StorageTest" time="0.313" />
+    <testcase name="exportedPassportExcludesUrisAndKeysAndMergesOnlyKnownTracks" classname="app.songlane.StorageTest" time="0.158" />
+  </testsuite>
+</testsuites>

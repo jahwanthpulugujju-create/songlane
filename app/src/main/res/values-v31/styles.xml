@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.Songlane" parent="Theme.Songlane.Base">
+        <item name="android:windowSplashScreenBackground">#111510</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_songlane</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">#111510</item>
+    </style>
+</resources>

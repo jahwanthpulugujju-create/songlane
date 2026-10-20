@@ -1,0 +1,17 @@
+# Architecture
+
+`MainActivity` hosts the Compose UI. `MainViewModel` owns user intents and exposes repository/player state. The domain layer is plain Kotlin: track identity, playlists, history/privacy, shuffle policies, route constraints/ranking/validation, bounded local intent parsing, lyric parsing, and import-size bounds. UI code does not call a cloud provider directly.
+
+`LibraryRepository` is the single in-process owner of a versioned SQLite document store. Updates run on IO, serialize behind one lock, persist before publishing a new immutable state, and retain at most 20,000 history events. The database itself supplies transaction-safe atomic row replacement and WAL. The document layout is deliberately simple; indexing/per-entity tables and explicit migrations should precede a production claim for very large libraries.
+
+`AudioImporter` reads metadata through Android APIs on IO and checks playable file access before route creation. SAF file/folder grants are persisted; MediaStore scanning requires the Android audio permission. Indexing is additive and deduplicates URI-derived IDs. Songlane never rewrites or deletes user audio. `available` is a last-checked state, not a guarantee that a file cannot disappear between validation and playback.
+
+`PlaybackService` owns ExoPlayer, audio focus/noisy handling, foreground media notification, listening-time tracking and queue snapshots. It exposes a MediaLibrarySession for trusted media controllers, a browsable local songs/favorites/playlists tree and search, plus Android media-button resumption. Media IDs from external controllers are resolved against the local repository; supplied arbitrary URIs are discarded. `PlaybackClient` is the app controller and polls position while visible. Service playback is independent of the Compose activity.
+
+`DiscoveryEngine` first filters hard constraints, then ranks eligible metadata/history candidates with deterministic tie breaking. It caps route duration, prevents duplicates, applies artist adjacency and exclusions, and validates its own output before showing it. Unknown metadata cannot satisfy a strict known-value constraint. Reasons distinguish shared tags from local-history heuristics. Destination strings are soft ranking intent; unmatched intent yields a warning. Feedback retains an accepted prefix and changes the proposed route; the playing queue changes only on explicit Play route.
+
+`SessionDirector` parses a small local vocabulary. Optional `CloudIntentParser` uses a fixed TLS endpoint with no redirects; it sends only the prompt after consent. A key is AES-GCM encrypted through `KeyVault` with a non-exportable Android Keystore key. It reserves the daily call allowance before sending and bounds prompts, response size, timeout and output length. The returned plan has no authority over playback or files. All actual route constraints are checked locally.
+
+Taste Passport imports are schema/version/count/size checked before persistence. Audio URIs and keys are never consumed from the document. Metadata matching can leave ambiguous recordings unmatched instead of merging them silently. Local imported lyrics are excluded from the passport.
+
+The widget and quick settings tile connect through a short-lived controller; Android can reject a background start. They do not use an independent audio engine. Real Android Auto/OEM/physical-device compatibility remains a release validation task.

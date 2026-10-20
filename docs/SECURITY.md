@@ -1,0 +1,11 @@
+# Security and data boundaries
+
+Local audio access is granted through Android documents APIs or READ_MEDIA_AUDIO. Songlane asks for no microphone, contacts, location or broad filesystem management permission. Imported passports cannot introduce playable URIs. Exports exclude API keys and original file paths; they include sensitive listening history after an explicit warning.
+
+Cloud parsing is disabled by default and uses a fixed HTTPS Anthropic endpoint. Redirects are disabled to prevent credential forwarding. The API key is in an authentication header only. User prompt is bounded to 2,000 characters, response to 64 KiB, output to 256 tokens, requests to 10 per local calendar day; connection/read timeouts apply. The call allowance is reserved before any request, including failures; there are no automatic billable retries. Prompt text alone leaves the device after session consent. This daily allowance can be reset by reinstalling/clearing data and is not an account billing control. Set monetary limits at the provider. Model output can only populate a small bounded intent schema, then users review route settings and explicitly start playback. It cannot select arbitrary media IDs, call arbitrary URLs, access files, run tools or override the deterministic validator.
+
+Keys use Android Keystore AES-GCM with a fresh IV and no plaintext backup/export. Android app backup is disabled. A rooted/compromised device can still compromise a running application; no client-side storage can guarantee protection there. Deleting a local key does not revoke it at the provider.
+
+The media service only accepts this application, trusted platform/media controllers and its own notification controller. It supports local URI playback and cannot be used as a general network music proxy through the UI. Metadata and playlist text are displayed as text; no HTML/scripts or model instructions are executed. Folder recursion and passport imports have size/count bounds.
+
+No telemetry, advertising SDK, backend account system or cloud synchronization is present. Playback/history remain local. Report security issues privately to the repository owner; establish a maintained public disclosure contact before a public release.
