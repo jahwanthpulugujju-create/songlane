@@ -119,6 +119,7 @@ object DiscoveryEngine {
                     val similar =
                         when {
                             previous == null -> 0.0
+                            confirmedContributorLink(previous, t) != null -> 2.4
                             t.genre.isNotBlank() &&
                                 normalize(t.genre) == normalize(previous.genre) -> 2.0
                             t.tags.intersect(previous.tags).isNotEmpty() -> 1.7
@@ -148,6 +149,8 @@ object DiscoveryEngine {
                 } ?: break
             val reason =
                 when {
+                    previous != null && confirmedContributorLink(previous, next) != null ->
+                        "MusicBrainz credits ${confirmedContributorLink(previous, next)!!.name} on both linked recordings"
                     next.genre.isNotBlank() &&
                         previous != null &&
                         normalize(next.genre) == normalize(previous.genre) ->
@@ -160,7 +163,11 @@ object DiscoveryEngine {
                     next.id !in last -> "Unheard in your recorded listening history"
                     else -> "A fresh turn from your available library"
                 }
-            steps += RouteStep(next, reason, "Local file tags and on-device history · heuristic")
+            val evidence =
+                if (previous != null && confirmedContributorLink(previous, next) != null)
+                    "MusicBrainz core contributor IDs · recordings linked by you · CC0"
+                else "Local file tags and on-device history · heuristic"
+            steps += RouteStep(next, reason, evidence)
             elapsed += next.durationMs
             eligible.remove(next)
         }

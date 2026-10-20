@@ -66,11 +66,11 @@ fun SonglaneApp(vm: MainViewModel) {
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
             if (uri != null) {
                 runCatching {
-                        context.contentResolver.takePersistableUriPermission(
-                            uri,
-                            Intent.FLAG_GRANT_READ_URI_PERMISSION,
-                        )
-                    }
+                    context.contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                    )
+                }
                     .onSuccess { vm.importFolder(uri) }
                     .onFailure {
                         vm.notify("Cannot keep access to this folder. Choose files instead.")
@@ -493,6 +493,7 @@ private fun PlayerScreen(
     var audio by remember { mutableStateOf(false) }
     var lyrics by remember { mutableStateOf(false) }
     val sleepDeadline by vm.sleepDeadline.collectAsState()
+    val playbackGain by vm.playbackGain.collectAsState()
     var lyricsTarget by remember { mutableStateOf<String?>(null) }
     val lyricFile =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -639,9 +640,33 @@ else->"off"}}",
             onDismissRequest = { audio = false },
             title = { Text("What you're hearing") },
             text = {
-                Text(
-                    "Source: ${t.source}\nFile type: ${t.mime.ifBlank{"Unknown"}}\nDuration: ${duration(t.durationMs)}\n\nFile metadata is reported locally. Bitrate, bit depth, sample rate, mastering and output path have not been verified. No lossless or bit-perfect output claim is made.\n\nCover: original procedural artwork, not embedded album artwork."
-                )
+                Column(
+                    Modifier.heightIn(max = 430.dp).verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    val gain = playbackGain.takeIf { it.trackId == t.id }
+                    Text(
+                        "ReplayGain · ${state.settings.replayGainMode.label}",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Text(
+                        t.replayGain?.let {
+                            "Reported tags: song ${it.trackGainDb?.let { db->"${"%.2f".format(db)} dB" } ?: "unknown"} · album ${it.albumGainDb?.let { db->"${"%.2f".format(db)} dB" } ?: "unknown"}\n${it.source}"
+                        } ?: "No supported ReplayGain tags in this file.",
+                        color = Muted,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                    Text(
+                        gain?.let {
+                            "${it.explanation}\nPCM gain: ${it.appliedDb?.let { db->"${"%.2f".format(db)} dB" } ?: "Not applied/verified"}"
+                        } ?: "Waiting for this decoded stream's processing state.",
+                        color = Sage,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                    Text(
+                        "Source: ${t.source}\nFile type: ${t.mime.ifBlank{"Unknown"}}\nDuration: ${duration(t.durationMs)}\n\nFile metadata is reported locally. Bitrate, bit depth, sample rate, mastering and output path have not been verified. No lossless or bit-perfect output claim is made.\n\nCover: original procedural artwork, not embedded album artwork."
+                    )
+                }
             },
             confirmButton = { TextButton({ audio = false }) { Text("Done") } },
         )
@@ -792,6 +817,7 @@ private fun QueueScreen(
 
 @Composable
 private fun TrackDetails(vm: MainViewModel, t: Track, onDismiss: () -> Unit) {
+    var metadata by remember { mutableStateOf(false) }
     var genre by remember(t.id) { mutableStateOf(t.genre) }
     var language by remember(t.id) { mutableStateOf(t.language) }
     var tags by remember(t.id) { mutableStateOf(t.tags.joinToString(", ")) }
@@ -814,6 +840,16 @@ private fun TrackDetails(vm: MainViewModel, t: Track, onDismiss: () -> Unit) {
                     "Your edits stay in Songlane and do not rewrite the audio file.",
                     style = MaterialTheme.typography.bodyMedium,
                 )
+                t.recordingMetadata?.let { linked ->
+                    RecordingMetadataCard(linked)
+                    TextButton({ vm.unlinkMetadata(t.id) }) { Text("Unlink recording details") }
+                }
+                OutlinedButton({
+                    vm.closeMetadata()
+                    metadata = true
+                }) {
+                    Text("Find recording details")
+                }
                 OutlinedTextField(genre, { genre = it.take(100) }, label = { Text("Genre") })
                 OutlinedTextField(
                     language,
@@ -843,8 +879,8 @@ private fun TrackDetails(vm: MainViewModel, t: Track, onDismiss: () -> Unit) {
         confirmButton = {
             TextButton({
                 vm.action {
-                    vm.repo.editTrack(
-                        t.copy(
+                    vm.repo.updateTrack(t.id) { current ->
+                        current.copy(
                             genre = genre.trim(),
                             language = language.trim(),
                             tags =
@@ -856,7 +892,7 @@ private fun TrackDetails(vm: MainViewModel, t: Track, onDismiss: () -> Unit) {
                             year = year.toIntOrNull(),
                             explicit = rating,
                         )
-                    )
+                    }
                 }
                 onDismiss()
             }) {
@@ -865,6 +901,7 @@ private fun TrackDetails(vm: MainViewModel, t: Track, onDismiss: () -> Unit) {
         },
         dismissButton = { TextButton(onDismiss) { Text("Cancel") } },
     )
+    if (metadata) RecordingMetadataDialog(vm, t, { metadata = false })
     if (remove)
         AlertDialog(
             onDismissRequest = { remove = false },

@@ -214,6 +214,12 @@ fun SettingsScreen(
                 TextButton(onFolder) { Text("Add folder") }
                 TextButton(onScan) { Text("Scan device") }
             }
+            Spacer(Modifier.height(12.dp))
+            InfoCard(
+                MUSICBRAINZ_PROVIDER.name,
+                "Open a song's details to look up and confirm its recording. This optional metadata source cannot play music. Each lookup session asks before sending a search.",
+                Icons.Rounded.Info,
+            )
         }
         if (state.settings.folderUris.isNotEmpty()) {
             item {
@@ -251,6 +257,21 @@ fun SettingsScreen(
         }
         item {
             SectionTitle("Playback")
+            Text("ReplayGain", style = MaterialTheme.typography.titleMedium)
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                ReplayGainMode.entries.forEach { mode ->
+                    FilterChip(
+                        state.settings.replayGainMode == mode,
+                        { vm.action { vm.repo.settings { it.copy(replayGainMode = mode) } } },
+                        label = { Text(mode.label) },
+                    )
+                }
+            }
+            Text(
+                "Uses local file tags, not loudness analysis. Missing tags keep the original level; album mode falls back to song tags. Boosts require a peak tag and are limited by its reported value. Audio processing changes samples.",
+                color = Muted,
+                style = MaterialTheme.typography.bodyMedium,
+            )
             Text("Fair shuffle", style = MaterialTheme.typography.titleMedium)
             state.settings.shuffle.let { selected ->
                 ShuffleMode.entries.forEach { mode ->
@@ -380,7 +401,7 @@ fun SettingsScreen(
         item {
             SectionTitle("About Songlane")
             Text(
-                "Version 0.1.0 · An independent, open-source local music player. No ads. No analytics. No streaming catalog or provider subscription included.",
+                "Version ${app.songlane.BuildConfig.VERSION_NAME} · An independent, open-source local music player. No ads. No analytics. No streaming catalog or provider subscription included.",
                 color = Muted,
             )
             Spacer(Modifier.height(8.dp))

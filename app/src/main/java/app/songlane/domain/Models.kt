@@ -20,6 +20,8 @@ data class Track(
     val source: String = "Local file",
     val available: Boolean = true,
     val lyrics: String = "",
+    val recordingMetadata: RecordingMetadata? = null,
+    val replayGain: ReplayGainInfo? = null,
 ) {
     val searchable
         get() = normalize("$title $artist $album $genre $language ${tags.joinToString(" ")}")
@@ -45,6 +47,8 @@ data class Settings(
     val skipSilence: Boolean = false,
     val folderUris: Set<String> = emptySet(),
     val pitch: Float = 1f,
+    val metadataContact: String = "",
+    val replayGainMode: ReplayGainMode = ReplayGainMode.OFF,
 )
 
 data class LibraryState(
@@ -122,6 +126,16 @@ val LOCAL_PROVIDER =
         true,
         true,
         "User-granted audio files. No account or network required.",
+    )
+
+val MUSICBRAINZ_PROVIDER =
+    ProviderCapability(
+        "musicbrainz",
+        "MusicBrainz recording details",
+        false,
+        true,
+        false,
+        "Optional, confirmed recording metadata from MusicBrainz core data (CC0). No audio playback or downloads; requests require lookup consent and a contact.",
     )
 
 fun normalize(text: String): String =

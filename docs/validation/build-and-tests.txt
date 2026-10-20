@@ -96,28 +96,20 @@
 > Task :app:writeReleaseSigningConfigVersions UP-TO-DATE
 
 > Task :app:compileDebugKotlin
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/LibraryScreen.kt:67:41 'val Icons.Rounded.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.ArrowBack.
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/LibraryScreen.kt:181:64 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/LibraryScreen.kt:192:43 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/ProfileScreen.kt:200:37 'val Icons.Rounded.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.ArrowBack.
 w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:332:54 'val Icons.Rounded.PlaylistPlay: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.PlaylistPlay.
 w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:337:57 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
 w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:342:60 'val Icons.Rounded.PlaylistAdd: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.PlaylistAdd.
 w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:468:42 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:593:41 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:599:37 'val Icons.Rounded.Notes: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.Notes.
+w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:594:41 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
+w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:600:37 'val Icons.Rounded.Notes: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.Notes.
 
 > Task :app:compileReleaseKotlin
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/LibraryScreen.kt:67:41 'val Icons.Rounded.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.ArrowBack.
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/LibraryScreen.kt:181:64 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/LibraryScreen.kt:192:43 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/ProfileScreen.kt:200:37 'val Icons.Rounded.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.ArrowBack.
 w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:332:54 'val Icons.Rounded.PlaylistPlay: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.PlaylistPlay.
 w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:337:57 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
 w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:342:60 'val Icons.Rounded.PlaylistAdd: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.PlaylistAdd.
 w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:468:42 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:593:41 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
-w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:599:37 'val Icons.Rounded.Notes: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.Notes.
+w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:594:41 'val Icons.Rounded.QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic.
+w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/src/main/java/app/songlane/ui/SonglaneApp.kt:600:37 'val Icons.Rounded.Notes: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.Notes.
 
 > Task :app:compileDebugJavaWithJavac UP-TO-DATE
 > Task :app:processDebugJavaRes UP-TO-DATE
@@ -125,48 +117,45 @@ w: file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/ap
 > Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:dexBuilderDebug
 > Task :app:mergeDebugJavaResource UP-TO-DATE
-> Task :app:mergeDebugGlobalSynthetics
-> Task :app:generateDebugAndroidTestLintModel
-> Task :app:generateDebugLintReportModel
-> Task :app:generateDebugUnitTestLintModel
-> Task :app:mergeProjectDexDebug
-> Task :app:packageDebug
-> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
 > Task :app:compileDebugUnitTestKotlin
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes UP-TO-DATE
-> Task :app:compileDebugAndroidTestKotlin
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugGlobalSynthetics
 > Task :app:testDebugUnitTest
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:compileDebugAndroidTestKotlin
+> Task :app:packageDebug
 > Task :app:compileDebugAndroidTestJavaWithJavac UP-TO-DATE
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
 > Task :app:dexBuilderDebugAndroidTest
 > Task :app:processDebugAndroidTestJavaRes UP-TO-DATE
 > Task :app:mergeDebugAndroidTestJavaResource UP-TO-DATE
-> Task :app:mergeDebugAndroidTestGlobalSynthetics
 > Task :app:mergeProjectDexDebugAndroidTest
+> Task :app:mergeDebugAndroidTestGlobalSynthetics
 > Task :app:packageDebugAndroidTest
 > Task :app:createDebugAndroidTestApkListingFileRedirect UP-TO-DATE
-> Task :app:lintAnalyzeDebugAndroidTest
 > Task :app:lintAnalyzeDebugUnitTest
-Starting 9 tests on Pixel_7a(AVD) - 14
+> Task :app:lintAnalyzeDebugAndroidTest
+Starting 22 tests on Pixel_7a(AVD) - 14
+Pixel_7a(AVD) - 14 Tests 0/22 completed. (0 skipped) (0 failed)
 > Task :app:lintAnalyzeDebug
-
-Pixel_7a(AVD) - 14 Tests 0/9 completed. (0 skipped) (0 failed)
-
 > Task :app:connectedDebugAndroidTest
 
-Pixel_7a(AVD) - 14 Tests 1/9 completed. (0 skipped) (0 failed)
-Pixel_7a(AVD) - 14 Tests 6/9 completed. (0 skipped) (0 failed)
-Finished 9 tests on Pixel_7a(AVD) - 14
+Pixel_7a(AVD) - 14 Tests 14/22 completed. (0 skipped) (0 failed)
+Finished 22 tests on Pixel_7a(AVD) - 14
 
 > Task :app:compileReleaseJavaWithJavac UP-TO-DATE
 > Task :app:mergeReleaseGeneratedProguardFiles UP-TO-DATE
 > Task :app:processReleaseJavaRes UP-TO-DATE
 > Task :app:mergeReleaseJavaResource UP-TO-DATE
+> Task :app:generateReleaseLintVitalReportModel
 
 > Task :app:lintReportDebug
 Wrote HTML report to file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/outputs/songlane/app/build/reports/lint-results-debug.html
 
-> Task :app:generateReleaseLintVitalReportModel
 > Task :app:lintDebug
 > Task :app:expandReleaseArtProfileWildcards
 > Task :app:lintVitalAnalyzeRelease
@@ -178,6 +167,6 @@ Wrote HTML report to file:///C:/Users/user/Documents/Codex/2026-10-20/new-chat/o
 > Task :app:createReleaseApkListingFileRedirect UP-TO-DATE
 > Task :app:assembleRelease
 
-BUILD SUCCESSFUL in 9m 12s
+BUILD SUCCESSFUL in 1m 40s
 131 actionable tasks: 31 executed, 100 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html

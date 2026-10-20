@@ -8,10 +8,14 @@ import androidx.lifecycle.viewModelScope
 import app.songlane.agent.CloudIntentParser
 import app.songlane.agent.KeyVault
 import app.songlane.data.AudioImporter
+import app.songlane.data.MusicBrainzClient
+import app.songlane.data.validMetadataContact
 import app.songlane.domain.*
 import app.songlane.playback.PlaybackClient
 import app.songlane.playback.PlaybackService
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +28,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val library = repo.state
     val playback = PlaybackClient(application, viewModelScope)
     private val importer = AudioImporter(application)
+    private val musicBrainz = MusicBrainzClient()
+    private var metadataJob: Job? = null
+    val metadataSearch = MutableStateFlow(MetadataSearchState())
     val vault = KeyVault(application)
     val cloud = CloudIntentParser(application, vault)
     private val mutableBusy = MutableStateFlow(false)
@@ -32,6 +39,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val parsedIntent = MutableStateFlow<SessionIntent?>(null)
     val keySaved = MutableStateFlow(vault.exists())
     val sleepDeadline = PlaybackService.sleepDeadline
+    val playbackGain = PlaybackService.gainState
     val lastError = MutableStateFlow<String?>(null)
     private val notices = Channel<String>(Channel.BUFFERED)
     val messages = notices.receiveAsFlow()
@@ -82,6 +90,100 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun favorite(id: String) = action { repo.favorite(id) }
+
+    fun searchMetadata(
+        trackId: String,
+        title: String,
+        artist: String,
+        contact: String,
+        consent: Boolean,
+    ) {
+        metadataJob?.cancel()
+        metadataJob = viewModelScope.launch {
+            metadataSearch.value = MetadataSearchState(trackId = trackId, loading = true)
+            try {
+                require(consent) { "Confirm consent before sending song metadata" }
+                require(validMetadataContact(contact.trim())) {
+                    "Enter a contact email or HTTPS support/project URL"
+                }
+                repo.settings { it.copy(metadataContact = contact.trim()) }
+                val results =
+                    withContext(Dispatchers.IO) {
+                        musicBrainz.search(title, artist, contact.trim(), consent)
+                    }
+                metadataSearch.value = MetadataSearchState(trackId, results)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                metadataSearch.value =
+                    MetadataSearchState(
+                        trackId = trackId,
+                        error = e.message ?: "Metadata lookup failed",
+                    )
+            }
+        }
+    }
+
+    fun lookupMetadata(trackId: String, recordingId: String, contact: String, consent: Boolean) {
+        val previous = metadataSearch.value
+        metadataJob?.cancel()
+        metadataJob = viewModelScope.launch {
+            metadataSearch.value =
+                previous.copy(trackId = trackId, loading = true, detail = null, error = null)
+            try {
+                val result =
+                    withContext(Dispatchers.IO) {
+                        musicBrainz.lookup(recordingId, contact.trim(), consent)
+                    }
+                metadataSearch.value =
+                    previous.copy(trackId = trackId, detail = result, loading = false, error = null)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                metadataSearch.value =
+                    previous.copy(
+                        trackId = trackId,
+                        loading = false,
+                        error = e.message ?: "Recording details could not be retrieved",
+                    )
+            }
+        }
+    }
+
+    fun confirmMetadata(trackId: String) = action {
+        val selected =
+            metadataSearch.value.takeIf { it.trackId == trackId }?.detail
+                ?: error("Choose a recording first")
+        repo.update { s ->
+            s.copy(
+                tracks =
+                    s.tracks.map { t ->
+                        if (t.id == trackId)
+                            t.copy(
+                                recordingMetadata =
+                                    selected.copy(confirmedAt = System.currentTimeMillis())
+                            )
+                        else t
+                    }
+            )
+        }
+        closeMetadata()
+        notify("MusicBrainz recording linked. Your file tags and audio stay unchanged.")
+    }
+
+    fun unlinkMetadata(trackId: String) = action {
+        repo.update { s ->
+            s.copy(
+                tracks =
+                    s.tracks.map { if (it.id == trackId) it.copy(recordingMetadata = null) else it }
+            )
+        }
+    }
+
+    fun closeMetadata() {
+        metadataJob?.cancel()
+        metadataSearch.value = MetadataSearchState()
+    }
 
     fun play(tracks: List<Track>, index: Int = 0) {
         if (!playback.state.value.connected) {
@@ -256,11 +358,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             library.value.tracks.find { it.id == trackId }
                 ?: error("Song is no longer in the library")
         require(Lyrics.parse(text).isNotEmpty()) { "No readable lyric lines found" }
-        repo.editTrack(track.copy(lyrics = text))
+        repo.updateTrack(track.id) { it.copy(lyrics = text) }
         notify("Local lyrics added. They are excluded from Taste Passport exports.")
     }
 
     fun eraseAll() = action {
+        closeMetadata()
         playback.clear()
         sleep(0)
         val app = getApplication<Application>()
@@ -295,3 +398,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         super.onCleared()
     }
 }
+
+data class MetadataSearchState(
+    val trackId: String? = null,
+    val results: List<RecordingMetadata> = emptyList(),
+    val loading: Boolean = false,
+    val detail: RecordingMetadata? = null,
+    val error: String? = null,
+)

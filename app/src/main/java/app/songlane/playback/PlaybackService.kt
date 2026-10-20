@@ -1,6 +1,7 @@
 package app.songlane.playback
 
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import androidx.media3.common.AudioAttributes
@@ -8,7 +9,10 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
+import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.audio.AudioSink
+import androidx.media3.exoplayer.audio.DefaultAudioSink
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
@@ -37,11 +41,29 @@ class PlaybackService : MediaLibraryService() {
     private var listenedMs = 0L
     private var lastTick = SystemClock.elapsedRealtime()
     private var lastPrivacy = false
+    private val gainProcessor =
+        ReplayGainAudioProcessor(
+            { id -> repo.state.value.tracks.find { it.id == id }?.replayGain },
+            { repo.state.value.settings.replayGainMode },
+        )
 
     override fun onCreate() {
         super.onCreate()
+        val renderers =
+            object : DefaultRenderersFactory(this) {
+                override fun buildAudioSink(
+                    context: Context,
+                    enableFloatOutput: Boolean,
+                    enableAudioOutputPlaybackParams: Boolean,
+                ): AudioSink =
+                    DefaultAudioSink.Builder(context)
+                        .setEnableFloatOutput(false)
+                        .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
+                        .setAudioProcessors(arrayOf(gainProcessor))
+                        .build()
+            }
         player =
-            ExoPlayer.Builder(this).build().apply {
+            ExoPlayer.Builder(this, renderers).build().apply {
                 setAudioAttributes(
                     AudioAttributes.Builder()
                         .setUsage(C.USAGE_MEDIA)
@@ -61,6 +83,7 @@ class PlaybackService : MediaLibraryService() {
                             trackedId = item?.mediaId
                             lastTick = SystemClock.elapsedRealtime()
                             persist()
+                            updateGain()
                             updateWidget()
                         }
 
@@ -310,8 +333,10 @@ class PlaybackService : MediaLibraryService() {
                     persist()
                 }
                 updateWidget()
+                updateGain()
             }
         }
+        scope.launch { gainProcessor.state.collect { mutableGainState.value = it } }
         scope.launch {
             sleepDeadline.collect { deadline ->
                 sleepJob?.cancel()
@@ -374,6 +399,10 @@ class PlaybackService : MediaLibraryService() {
         )
     }
 
+    private fun updateGain() {
+        gainProcessor.refreshActive()
+    }
+
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo) = session
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -400,6 +429,7 @@ class PlaybackService : MediaLibraryService() {
         }
         session?.release()
         player.release()
+        mutableGainState.value = PlaybackGainState()
         scope.cancel()
         super.onDestroy()
     }
@@ -427,6 +457,8 @@ class PlaybackService : MediaLibraryService() {
     }
 
     companion object {
+        private val mutableGainState = MutableStateFlow(PlaybackGainState())
+        val gainState = mutableGainState.asStateFlow()
         private val mutableSleepDeadline = MutableStateFlow(0L)
         val sleepDeadline = mutableSleepDeadline.asStateFlow()
 

@@ -11,8 +11,8 @@ android {
         applicationId = "app.songlane"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true; buildConfig = true }
@@ -63,7 +63,7 @@ tasks.register("exportSbom") {
                 "properties" to listOf(mapOf("name" to "songlane:license-evidence", "value" to if(names.isEmpty()) "Unverified: no direct license field in cached POM" else "Cached Maven POM")))
                 .apply { if(names.isNotEmpty()) put("licenses", names.map { mapOf("license" to mapOf("name" to it)) }) }
         }.distinctBy { "${it["group"]}:${it["name"]}:${it["version"]}" }.sortedBy { "${it["group"]}:${it["name"]}" }
-        val result = mapOf("bomFormat" to "CycloneDX", "specVersion" to "1.5", "version" to 1, "metadata" to mapOf("component" to mapOf("type" to "application", "name" to "songlane", "version" to "0.1.0")), "components" to components)
+        val result = mapOf("bomFormat" to "CycloneDX", "specVersion" to "1.5", "version" to 1, "metadata" to mapOf("component" to mapOf("type" to "application", "name" to "songlane", "version" to android.defaultConfig.versionName.orEmpty())), "components" to components)
         rootProject.file("docs/sbom.cdx.json").writeText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(result)))
         println("Wrote ${components.size} resolved runtime components to docs/sbom.cdx.json")
     }

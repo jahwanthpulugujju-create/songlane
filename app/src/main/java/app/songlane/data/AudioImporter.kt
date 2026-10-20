@@ -7,6 +7,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.documentfile.provider.DocumentFile
 import app.songlane.domain.Lyrics
+import app.songlane.domain.ReplayGainReader
 import app.songlane.domain.Track
 import java.io.File
 import java.security.MessageDigest
@@ -58,6 +59,12 @@ class AudioImporter(private val context: Context) {
                     tag(MediaMetadataRetriever.METADATA_KEY_GENRE),
                     tag(MediaMetadataRetriever.METADATA_KEY_YEAR).take(4).toIntOrNull(),
                     mime = tag(MediaMetadataRetriever.METADATA_KEY_MIMETYPE),
+                    replayGain = runCatching {
+                            context.contentResolver
+                                .openInputStream(uri)
+                                ?.use(ReplayGainReader::read)
+                        }
+                            .getOrNull(),
                     lyrics =
                         runCatching {
                                 context.contentResolver

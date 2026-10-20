@@ -86,6 +86,7 @@ class LibraryRepository(context: Context, databaseName: String = "songlane.db") 
                                     addedAt = it.addedAt,
                                     year = it.year ?: t.year,
                                     lyrics = it.lyrics.ifBlank { t.lyrics },
+                                    recordingMetadata = it.recordingMetadata,
                                 )
                             } ?: t
                         })
@@ -95,8 +96,9 @@ class LibraryRepository(context: Context, databaseName: String = "songlane.db") 
         )
     }
 
-    suspend fun editTrack(track: Track) = update { s ->
-        s.copy(tracks = s.tracks.map { if (it.id == track.id) track else it })
+    suspend fun updateTrack(id: String, transform: (Track) -> Track) = update { s ->
+        require(s.tracks.any { it.id == id }) { "Song is no longer in the library" }
+        s.copy(tracks = s.tracks.map { if (it.id == id) transform(it) else it })
     }
 
     suspend fun favorite(id: String) = update { s ->
@@ -260,34 +262,95 @@ class LibraryRepository(context: Context, databaseName: String = "songlane.db") 
             // Match exact metadata + duration when URI-based IDs differ across devices. Never trust
             // imported URIs.
             val matches = mutableMapOf<String, String>()
+            val currentById = s.tracks.associateBy { it.id }
+            val byIdentity =
+                s.tracks
+                    .groupBy {
+                        Triple(normalize(it.title), normalize(it.artist), normalize(it.album))
+                    }
+                    .mapValues { (_, tracks) -> tracks.sortedBy { it.durationMs } }
+            val labels = mutableMapOf<String, JSONObject>()
+            val seenIds = mutableSetOf<String>()
             (0 until importedTracks.length()).forEach { i ->
                 val t = importedTracks.getJSONObject(i)
-                val match =
-                    s.tracks.firstOrNull { it.id == t.optString("id") }
-                        ?: s.tracks.singleOrNull {
-                            normalize(it.title) == normalize(t.optString("title")) &&
-                                normalize(it.artist) == normalize(t.optString("artist")) &&
-                                normalize(it.album) == normalize(t.optString("album")) &&
-                                kotlin.math.abs(it.durationMs - t.optLong("durationMs")) <= 1000
-                        }
-                if (match != null) matches[t.getString("id")] = match.id
+                val importedId = t.getString("id")
+                require(
+                    importedId.isNotBlank() && importedId.length <= 200 && seenIds.add(importedId)
+                ) {
+                    "Passport has duplicate or invalid track IDs"
+                }
+                val candidates =
+                    byIdentity[
+                            Triple(
+                                normalize(t.optString("title")),
+                                normalize(t.optString("artist")),
+                                normalize(t.optString("album")),
+                            )]
+                        .orEmpty()
+                val wanted = t.optLong("durationMs").coerceAtLeast(0)
+                var low = 0
+                var high = candidates.size
+                while (low < high) {
+                    val middle = (low + high) ushr 1
+                    if (candidates[middle].durationMs < wanted - 1000) low = middle + 1
+                    else high = middle
+                }
+                val first = candidates.getOrNull(low)?.takeIf { it.durationMs <= wanted + 1000 }
+                val second =
+                    candidates.getOrNull(low + 1)?.takeIf { it.durationMs <= wanted + 1000 }
+                val match = currentById[importedId] ?: first?.takeIf { second == null }
+                if (match != null) {
+                    matches[importedId] = match.id
+                    labels[match.id] = t
+                }
             }
             matched = matches.size
             val profile = j.optJSONObject("profile") ?: JSONObject()
             val incomingPlaylists =
                 j.array("playlists").objects(::playlist).map { p ->
-                    p.copy(
-                        id = UUID.randomUUID().toString(),
-                        trackIds = p.trackIds.mapNotNull { matches[it] }.distinct(),
-                    )
+                    require(runCatching { UUID.fromString(p.id) }.isSuccess) {
+                        "Passport has an invalid playlist ID"
+                    }
+                    p.copy(trackIds = p.trackIds.mapNotNull { matches[it] }.distinct())
                 }
             val incomingHistory =
                 j.array("history").objects(::listen).mapNotNull { h ->
                     matches[h.trackId]?.let { h.copy(trackId = it) }
                 }
             s.copy(
+                tracks =
+                    s.tracks.map { t ->
+                        labels[t.id]?.let { imported ->
+                            t.copy(
+                                genre =
+                                    if (imported.has("genre")) imported.optString("genre").take(100)
+                                    else t.genre,
+                                language =
+                                    if (imported.has("language"))
+                                        imported.optString("language").take(100)
+                                    else t.language,
+                                tags = if (imported.has("tags")) passportTags(imported) else t.tags,
+                                year =
+                                    if (imported.has("year"))
+                                        imported.optInt("year").takeIf { it in 1000..3000 }
+                                    else t.year,
+                                explicit =
+                                    if (imported.has("explicit"))
+                                        imported.opt("explicit") as? Boolean
+                                    else t.explicit,
+                            )
+                        } ?: t
+                    },
                 favorites = s.favorites + j.stringSet("favorites").mapNotNull { matches[it] },
-                playlists = s.playlists + incomingPlaylists,
+                playlists =
+                    (s.playlists + incomingPlaylists)
+                        .groupBy { it.id }
+                        .values
+                        .map { copies ->
+                            copies
+                                .first()
+                                .copy(trackIds = copies.flatMap { it.trackIds }.distinct())
+                        },
                 history =
                     (s.history + incomingHistory)
                         .distinctBy { "${it.trackId}:${it.at}" }
@@ -295,11 +358,26 @@ class LibraryRepository(context: Context, databaseName: String = "songlane.db") 
                         .takeLast(20000),
                 settings =
                     s.settings.copy(
-                        preferredGenres = profile.stringSet("preferredGenres"),
-                        avoidedArtists = profile.stringSet("avoidedArtists"),
+                        preferredGenres =
+                            s.settings.preferredGenres + profile.stringSet("preferredGenres"),
+                        avoidedArtists =
+                            s.settings.avoidedArtists + profile.stringSet("avoidedArtists"),
                     ),
             )
         }
-        return "Passport imported. Matched $matched local songs. Audio files and keys are never imported."
+        return "Passport imported. Matched $matched local songs and merged labels/playlists. Audio files and keys are excluded; recording identity links need fresh confirmation."
     }
+}
+
+private fun passportTags(json: JSONObject): Set<String> {
+    val array = json.array("tags")
+    require(array.length() <= 1000) { "A song has more than 1,000 imported tags" }
+    return (0 until array.length())
+        .map {
+            array.getString(it).also { tag ->
+                require(tag.length <= 2000) { "An imported tag exceeds 2,000 characters" }
+            }
+        }
+        .filter { it.isNotBlank() }
+        .toSet()
 }

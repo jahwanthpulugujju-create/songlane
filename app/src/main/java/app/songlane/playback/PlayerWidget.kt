@@ -37,7 +37,8 @@ class PlayerWidget : AppWidgetProvider() {
             views.setTextViewText(R.id.widget_artist, artist)
             views.setImageViewResource(
                 R.id.widget_toggle,
-                if (playing) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play,
+                if (playing) android.R.drawable.ic_media_pause
+                else android.R.drawable.ic_media_play,
             )
             views.setContentDescription(R.id.widget_toggle, if (playing) "Pause" else "Play")
             val open =

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="app.songlane.DiscoveryEngineTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-10-20T10:56:02.315Z" hostname="DESKTOP-OQP14F8" time="1.114">
+<testsuite name="app.songlane.DiscoveryEngineTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-10-20T12:28:17.801Z" hostname="DESKTOP-OQP14F8" time="0.458">
   <properties/>
-  <testcase name="forgottenTracksRankUnheardBeforeKnown" classname="app.songlane.DiscoveryEngineTest" time="0.134"/>
-  <testcase name="shuffleFiltersUnavailableAndExcludedAndDuplicateIds" classname="app.songlane.DiscoveryEngineTest" time="0.064"/>
-  <testcase name="strictExplicitFilterExcludesUnknownToo" classname="app.songlane.DiscoveryEngineTest" time="0.008"/>
-  <testcase name="avoidsArtistsCaseInsensitivelyAndTracksExplicitly" classname="app.songlane.DiscoveryEngineTest" time="0.06"/>
-  <testcase name="noCandidateNeverSilentlyRelaxesConstraints" classname="app.songlane.DiscoveryEngineTest" time="0.002"/>
-  <testcase name="localIntentParsingIsBoundedAndDoesNotInventTrackFacts" classname="app.songlane.DiscoveryEngineTest" time="0.022"/>
-  <testcase name="fuzzySearchAllowsOnlyOneEditForLongWords" classname="app.songlane.DiscoveryEngineTest" time="0.032"/>
-  <testcase name="balancedArtistsAvoidsAdjacentArtistWhenAlternativesExist" classname="app.songlane.DiscoveryEngineTest" time="0.083"/>
-  <testcase name="validatorDetectsTamperedAvailabilityDuplicatesAndFilters" classname="app.songlane.DiscoveryEngineTest" time="0.001"/>
-  <testcase name="boundedInputRejectsOverLimitAndAcceptsExactBoundary" classname="app.songlane.DiscoveryEngineTest" time="0.009"/>
-  <testcase name="routesHonorDurationRecentExclusionArtistCapAndUniquenessAcrossSeeds" classname="app.songlane.DiscoveryEngineTest" time="0.6"/>
-  <testcase name="everyShuffleModeReturnsExactlyTheAvailableSongsWithoutDuplicates" classname="app.songlane.DiscoveryEngineTest" time="0.06"/>
-  <testcase name="languageAndYearFiltersExcludeUnknownMetadata" classname="app.songlane.DiscoveryEngineTest" time="0.004"/>
-  <testcase name="rediscoverExcludesRecentAndPrioritizesForgottenFavorites" classname="app.songlane.DiscoveryEngineTest" time="0.006"/>
-  <testcase name="searchNormalizesAccentsAndCombinesWordsAcrossFields" classname="app.songlane.DiscoveryEngineTest" time="0.015"/>
+  <testcase name="forgottenTracksRankUnheardBeforeKnown" classname="app.songlane.DiscoveryEngineTest" time="0.043"/>
+  <testcase name="shuffleFiltersUnavailableAndExcludedAndDuplicateIds" classname="app.songlane.DiscoveryEngineTest" time="0.027"/>
+  <testcase name="strictExplicitFilterExcludesUnknownToo" classname="app.songlane.DiscoveryEngineTest" time="0.003"/>
+  <testcase name="avoidsArtistsCaseInsensitivelyAndTracksExplicitly" classname="app.songlane.DiscoveryEngineTest" time="0.022"/>
+  <testcase name="noCandidateNeverSilentlyRelaxesConstraints" classname="app.songlane.DiscoveryEngineTest" time="0.001"/>
+  <testcase name="localIntentParsingIsBoundedAndDoesNotInventTrackFacts" classname="app.songlane.DiscoveryEngineTest" time="0.011"/>
+  <testcase name="fuzzySearchAllowsOnlyOneEditForLongWords" classname="app.songlane.DiscoveryEngineTest" time="0.01"/>
+  <testcase name="balancedArtistsAvoidsAdjacentArtistWhenAlternativesExist" classname="app.songlane.DiscoveryEngineTest" time="0.029"/>
+  <testcase name="validatorDetectsTamperedAvailabilityDuplicatesAndFilters" classname="app.songlane.DiscoveryEngineTest" time="0.0"/>
+  <testcase name="boundedInputRejectsOverLimitAndAcceptsExactBoundary" classname="app.songlane.DiscoveryEngineTest" time="0.003"/>
+  <testcase name="routesHonorDurationRecentExclusionArtistCapAndUniquenessAcrossSeeds" classname="app.songlane.DiscoveryEngineTest" time="0.274"/>
+  <testcase name="everyShuffleModeReturnsExactlyTheAvailableSongsWithoutDuplicates" classname="app.songlane.DiscoveryEngineTest" time="0.02"/>
+  <testcase name="languageAndYearFiltersExcludeUnknownMetadata" classname="app.songlane.DiscoveryEngineTest" time="0.002"/>
+  <testcase name="rediscoverExcludesRecentAndPrioritizesForgottenFavorites" classname="app.songlane.DiscoveryEngineTest" time="0.001"/>
+  <testcase name="searchNormalizesAccentsAndCombinesWordsAcrossFields" classname="app.songlane.DiscoveryEngineTest" time="0.007"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

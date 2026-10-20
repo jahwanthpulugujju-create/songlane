@@ -62,7 +62,7 @@ C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\
 
    https://goo.gle/ExportedService
 
-C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\data\AudioImporter.kt:26: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\data\AudioImporter.kt:27: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
                                     .openAssetFileDescriptor(Uri.parse(t.uri), "r")
                                                              ~~~~~~~~~~~~~~~~
 C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\agent\CloudIntentParser.kt:36: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
@@ -77,15 +77,18 @@ C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\
 C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\data\LibraryRepository.kt:61: Warning: Use the KTX extension function SQLiteDatabase.transaction instead? [UseKtx]
                 db.beginTransaction()
                 ~~~~~~~~~~~~~~~~~~~~~
-C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\MainViewModel.kt:80: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\MainViewModel.kt:88: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
         val results = library.value.settings.folderUris.map { importer.folder(Uri.parse(it)) }
                                                                               ~~~~~~~~~~~~~
-C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\MainViewModel.kt:280: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\MainViewModel.kt:383: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
         app.getSharedPreferences("agent-limits", android.content.Context.MODE_PRIVATE)
         ^
-C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\ui\ProfileScreen.kt:240: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\ui\ProfileScreen.kt:246: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
                                             Uri.parse(folder),
                                             ~~~~~~~~~~~~~~~~~
+C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\java\app\songlane\ui\RecordingMetadataDialog.kt:194: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(metadata.sourceUrl)))
+                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    Explanation for issues of type "UseKtx":
    The Android KTX libraries decorates the Android platform SDK as well as
@@ -173,4 +176,4 @@ C:\Users\user\Documents\Codex\2026-10-20\new-chat\outputs\songlane\app\src\main\
    There are quickfixes to automatically extract this hardcoded string into a
    resource lookup.
 
-0 errors, 21 warnings
+0 errors, 22 warnings

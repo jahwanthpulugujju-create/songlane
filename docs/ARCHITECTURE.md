@@ -14,4 +14,8 @@
 
 Taste Passport imports are schema/version/count/size checked before persistence. Audio URIs and keys are never consumed from the document. Metadata matching can leave ambiguous recordings unmatched instead of merging them silently. Local imported lyrics are excluded from the passport.
 
+The MusicBrainz adapter is separate from audio playback. It uses bounded HTTPS transport, a shared request gate and explicit lookup consent. Recording identities are confirmed by the user after a separate detail request. Only core recording/artist/relationship data is retained; confirmed contributor IDs can provide attributed discovery edges. User contact preferences and imported external identity assertions cannot silently enter the trusted graph. Passport matching uses a metadata index plus duration binary search, preserves user labels and merges stable playlist IDs.
+
+ReplayGainReader handles bounded local tag formats; it does not analyze audio. ReplayGainAudioProcessor resolves the track ID from Media3's Timeline/period metadata at stream flush, then applies the selected tag/peak policy to that stream's PCM. This avoids applying a following track's gain to still-draining audio. The pipeline handles empty buffers and unsupported identity/encoding explicitly. Independent repository track patches preserve changes made by metadata lookup or lyric import between UI interactions.
+
 The widget and quick settings tile connect through a short-lived controller; Android can reject a background start. They do not use an independent audio engine. Real Android Auto/OEM/physical-device compatibility remains a release validation task.

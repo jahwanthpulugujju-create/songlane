@@ -15,6 +15,8 @@ node scripts/resolve-licenses.mjs
 
 On Windows use `gradlew.bat`. The wrapper downloads pinned Gradle 9.3.1. Install `app/build/outputs/apk/debug/app-debug.apk` on Android 8.0 or newer. The generated debug APK is for development, not a production-signed store release.
 
+Run instrumented tests on a dedicated emulator/test device: the suite resets the debug app's library/preferences while setting up its fixtures.
+
 With one authorized Android device/emulator connected, Windows users can build, install and launch with `powershell -ExecutionPolicy Bypass -File scripts/run-android.ps1`. With multiple devices, add `-DeviceSerial <adb-serial>`.
 
 ## Use
@@ -25,12 +27,14 @@ With one authorized Android device/emulator connected, Windows users can build, 
 4. Open **Compass**, choose an anchor, destination tags and exploration level, then set duration and strict filters. Routes only include available local songs. Unknown ratings/language/year are excluded when their filter requires known values. Reasons cite local tags/history; no acoustic or cultural relationship is invented.
 5. Use **You** to edit preferred genres and avoided artists, start a private session, or export a Taste Passport. Settings provide history pause/delete, passport import, source management, speed, silence skipping and full data deletion.
 6. **Session Director** parses simple listening requests locally. Optional Anthropic cloud parsing requires your encrypted API key and explicit consent. It sends only your text, produces a bounded plan, and never directly plays music or accesses files. All song selection and hard validation remain local. Provider charges may apply; set billing limits with the provider.
+7. In a song's details, choose **Find recording details** for optional MusicBrainz metadata. Supply a contact required by the source's User-Agent policy, consent to the lookup, review candidates and explicitly link the right performance/version. Core CC0 credits remain available offline after linking. Confirmed shared contributors can explain a Sonic Compass connection. File tags and audio are not rewritten.
+8. In Settings, select **ReplayGain → Per song / Per album** to use existing local gain tags. Tags are read from supported ID3, FLAC, Ogg Vorbis/Opus and bounded WAV-ID3 metadata. Rescan or re-add files imported by earlier versions. Positive gains require a peak tag; sample saturation prevents integer wrap if tags are incorrect. This is tag-based processing, not loudness analysis or a bit-perfect path.
 
 ## Data & privacy
 
 The versioned SQLite store contains the library index, favorites, playlists, user tags, preferences and up to 20,000 listens. A listen requires at least 10 seconds of actual playback. Private sessions and paused history do not record listens; private mode also clears the saved queue. Android backup is disabled. There is no analytics SDK. API keys are AES-GCM encrypted with a non-exportable Android Keystore key and excluded from exports.
 
-Taste Passport v1 is a JSON export with metadata, playlists, favorites, preferences and history. It excludes file paths, audio and secrets. Import matches local recordings by ID or exact title/artist/album plus duration; ambiguous matches remain unmatched. It cannot inject audio URIs, grant filesystem access or import keys. Import is limited to 5 MB, 50,000 metadata records, 20,000 listens and 1,000 playlists. Export/import concerns portability of user data, not ownership of copyrighted recordings.
+Taste Passport v1 is a JSON export with metadata, playlists, favorites, preferences and history. It excludes file paths, audio, lyrics, request-contact preferences and secrets. Import matches local recordings by ID or exact title/artist/album plus duration; ambiguous matches remain unmatched. It restores user tags, genre/language/year/rating labels and merges playlists by stable ID, so repeated import is idempotent for those playlists. It cannot inject audio URIs, grant filesystem access, import keys or trust imported recording-identity links. Those links require fresh source review. Import is limited to 5 MB, 50,000 metadata records, 20,000 listens and 1,000 playlists. Export/import concerns portability of user data, not ownership of copyrighted recordings.
 
 ## Scope and honest limits
 

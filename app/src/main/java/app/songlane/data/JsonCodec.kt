@@ -31,6 +31,8 @@ internal fun Track.json() =
         .put("source", source)
         .put("available", available)
         .put("lyrics", lyrics)
+        .put("recordingMetadata", recordingMetadata?.json() ?: JSONObject.NULL)
+        .put("replayGain", replayGain?.json() ?: JSONObject.NULL)
 
 internal fun track(j: JSONObject) =
     Track(
@@ -50,6 +52,8 @@ internal fun track(j: JSONObject) =
         j.optString("source", "Local file"),
         j.optBoolean("available", true),
         j.optString("lyrics"),
+        j.optJSONObject("recordingMetadata")?.let(::recordingMetadata),
+        j.optJSONObject("replayGain")?.let(::replayGain),
     )
 
 internal fun Playlist.json() =
@@ -85,6 +89,8 @@ internal fun Settings.json() =
         .put("skipSilence", skipSilence)
         .put("folderUris", JSONArray(folderUris.toList()))
         .put("pitch", pitch)
+        .put("metadataContact", metadataContact)
+        .put("replayGainMode", replayGainMode.name)
 
 internal fun settings(j: JSONObject) =
     Settings(
@@ -99,6 +105,9 @@ internal fun settings(j: JSONObject) =
         j.optBoolean("skipSilence"),
         j.stringSet("folderUris"),
         j.optDouble("pitch", 1.0).toFloat().coerceIn(.5f, 2f),
+        j.optString("metadataContact").take(200),
+        runCatching { ReplayGainMode.valueOf(j.optString("replayGainMode")) }
+            .getOrDefault(ReplayGainMode.OFF),
     )
 
 internal fun LibraryState.json() =
@@ -121,4 +130,67 @@ internal fun library(j: JSONObject): LibraryState {
         j.stringSet("blocked"),
         settings(j.optJSONObject("settings") ?: JSONObject()),
     )
+}
+
+internal fun RecordingMetadata.json(): JSONObject =
+    JSONObject()
+        .put("recordingId", recordingId)
+        .put("title", title)
+        .put("artistCredit", artistCredit)
+        .put("durationMs", durationMs ?: JSONObject.NULL)
+        .put("disambiguation", disambiguation)
+        .put("fetchedAt", fetchedAt)
+        .put("confirmedAt", confirmedAt ?: JSONObject.NULL)
+        .put("isrcs", JSONArray(isrcs.toList()))
+        .put(
+            "contributors",
+            JSONArray(
+                contributors.map {
+                    JSONObject()
+                        .put("artistId", it.artistId)
+                        .put("name", it.name)
+                        .put("role", it.role)
+                }
+            ),
+        )
+
+internal fun recordingMetadata(j: JSONObject): RecordingMetadata =
+    RecordingMetadata(
+        j.getString("recordingId"),
+        j.getString("title").take(500),
+        j.optString("artistCredit").take(1000),
+        if (j.isNull("durationMs")) null else j.optLong("durationMs").takeIf { it > 0 },
+        j.optString("disambiguation").take(500),
+        j.array("contributors")
+            .objects {
+                MusicContributor(
+                    it.getString("artistId"),
+                    it.getString("name").take(200),
+                    it.getString("role").take(100),
+                )
+            }
+            .take(100),
+        j.stringSet("isrcs"),
+        j.optLong("fetchedAt"),
+        if (j.isNull("confirmedAt")) null else j.optLong("confirmedAt"),
+    )
+
+internal fun ReplayGainInfo.json(): JSONObject =
+    JSONObject()
+        .put("trackGainDb", trackGainDb ?: JSONObject.NULL)
+        .put("albumGainDb", albumGainDb ?: JSONObject.NULL)
+        .put("trackPeak", trackPeak ?: JSONObject.NULL)
+        .put("albumPeak", albumPeak ?: JSONObject.NULL)
+        .put("source", source)
+
+internal fun replayGain(j: JSONObject): ReplayGainInfo? {
+    val values = mutableMapOf<String, String>()
+    listOf(
+            "trackGainDb" to "REPLAYGAIN_TRACK_GAIN",
+            "albumGainDb" to "REPLAYGAIN_ALBUM_GAIN",
+            "trackPeak" to "REPLAYGAIN_TRACK_PEAK",
+            "albumPeak" to "REPLAYGAIN_ALBUM_PEAK",
+        )
+        .forEach { (key, tag) -> if (!j.isNull(key)) values[tag] = j.get(key).toString() }
+    return ReplayGain.parse(values, j.optString("source").take(100))
 }

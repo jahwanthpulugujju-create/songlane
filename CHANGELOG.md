@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 — 20 October 2026
+
+- Added optional MusicBrainz core-data recording search/details with lookup consent, identified/rate-limited requests, explicit recording confirmation, source attribution and offline linked credits.
+- Added source-backed shared-contributor edges to local Sonic Compass routes; unconfirmed/imported identities cannot create those edges.
+- Added bounded ReplayGain metadata readers and opt-in track/album PCM gain processing tied to decoded stream identity, with peak-based boost limiting and source/processing diagnostics.
+- Fixed Passport custom-label restoration, indexed ambiguous matching and duplicate playlists on repeated import; tested a 2,000-record fixture.
+- Made independent song edits preserve fresh metadata/lyrics instead of replacing stale objects.
+- Expanded validation to 35 unit tests and 22 instrumented tests. Release signing and the remaining roadmap/release gates are still open.
+
 ## 0.1.0 — 20 October 2026
 
 - Initialized the `songlane` Git repository and original Android application.
