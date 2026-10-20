@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 — 20 October 2026
+
+- Added Anthropic/OpenAI intent adapters, reviewed model selection and independent Keystore-encrypted provider keys with authenticated provider binding and legacy migration.
+- Added local USD daily/monthly ceilings, transactional conservative reservations, receipt settlement, persistent unknown charges, UTC limits/rollback checks and expiring reviewed prices.
+- Added request host/usage previews, consent reset on edits, selectable timeout, cancellation/disconnect, safe error handling and strict intent/usage validation.
+- Kept local listening available when cloud accounting is damaged; full data deletion clears keys and accounting after canceling requests.
+- Added policy, ledger, provider, transport and Compose workflow tests. No paid cloud requests were made; provider billing/account access remains external evidence.
+
 ## 0.2.0 — 20 October 2026
 
 - Added optional MusicBrainz core-data recording search/details with lookup consent, identified/rate-limited requests, explicit recording confirmation, source attribution and offline linked credits.

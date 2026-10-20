@@ -1,0 +1,18 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Songlane
+Signer #1 certificate SHA-256 digest: 2cd9aa4117d7a2ddfb95137602792648b016207075e557b6cf3fc02727e33a8e
+Signer #1 certificate SHA-1 digest: 1fe0991525d18e23fcc81712058d4ce4f0718af3
+Signer #1 certificate MD5 digest: 064e413af4160a5c05cf762e56258c46
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: 29d675459585f7b42bca17314ce67279b633209a5600ee7a4100a3e6a9a8d149
+Signer #1 public key SHA-1 digest: 967abac6f32546eab034779f8dada918cd8ce07e
+Signer #1 public key MD5 digest: daf0fb051c1304c9952ad9e2dcd984f5
+Signed APK: ../songlane-v0.3.0.apk

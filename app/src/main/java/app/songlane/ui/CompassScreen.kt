@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.songlane.MainViewModel
+import app.songlane.agent.*
 import app.songlane.domain.*
 
 @Composable
@@ -373,7 +374,15 @@ fun CompassScreen(vm: MainViewModel, state: LibraryState, busy: Boolean, onImpor
             },
             dismissButton = { TextButton({ save = false }) { Text("Cancel") } },
         )
-    if (agent) AgentDialog(vm, busy, { agent = false })
+    if (agent)
+        AgentDialog(
+            vm,
+            busy,
+            {
+                vm.cancelIntent()
+                agent = false
+            },
+        )
 }
 
 @Composable
@@ -381,8 +390,17 @@ private fun AgentDialog(vm: MainViewModel, busy: Boolean, onDismiss: () -> Unit)
     var text by rememberSaveable { mutableStateOf("") }
     var cloud by rememberSaveable { mutableStateOf(false) }
     var consent by remember { mutableStateOf(false) }
-    var model by rememberSaveable { mutableStateOf("claude-haiku-4-5") }
-    val keySaved by vm.keySaved.collectAsState()
+    var modelId by rememberSaveable { mutableStateOf(IntentModels.all.first().id) }
+    val model = IntentModels.find(modelId)
+    val savedProviders by vm.savedProviders.collectAsState()
+    val keySaved = model.provider in savedProviders
+    val cloudState by vm.cloud.state.collectAsState()
+    val error by vm.lastError.collectAsState()
+    LaunchedEffect(text, modelId, savedProviders) { consent = false }
+    LaunchedEffect(Unit) {
+        vm.cloud.refresh()
+        vm.lastError.value = null
+    }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Session Director") },
@@ -397,14 +415,18 @@ private fun AgentDialog(vm: MainViewModel, busy: Boolean, onDismiss: () -> Unit)
                 )
                 OutlinedTextField(
                     text,
-                    { text = it.take(2000) },
+                    {
+                        text = it.take(2000)
+                        consent = false
+                    },
                     Modifier.fillMaxWidth(),
                     label = { Text("What are you in the mood for?") },
                     minLines = 3,
+                    enabled = !busy,
                 )
                 SettingToggle(
                     "Use cloud intent parsing",
-                    "Optional · Anthropic · ${vm.cloud.usedToday()}/10 requests today",
+                    "Optional · ${cloudState.usage.callsToday}/10 requests today (UTC)",
                     cloud,
                     {
                         cloud = it
@@ -413,19 +435,37 @@ private fun AgentDialog(vm: MainViewModel, busy: Boolean, onDismiss: () -> Unit)
                 )
                 if (cloud) {
                     if (!keySaved) Text("Add an API key in Settings first.", color = Coral)
-                    OutlinedTextField(
-                        model,
-                        { model = it.take(100) },
-                        label = { Text("Model ID") },
-                        singleLine = true,
+                    IntentModels.all.forEach { choice ->
+                        OutlinedButton(
+                            {
+                                modelId = choice.id
+                                consent = false
+                            },
+                            Modifier.fillMaxWidth(),
+                            enabled = !busy,
+                        ) {
+                            Text(
+                                "${if (choice.id == modelId) "✓ " else ""}${choice.provider.label} · ${choice.label}"
+                            )
+                        }
+                    }
+                    Text(
+                        "Only the prompt above and fixed parsing instructions go to ${model.provider.host}. Your key is sent only in its authorization header. Music, history and profile stay here. Max 256 output tokens; no tools or automatic retries.",
+                        color = Muted,
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                     Text(
-                        "Only this prompt is sent to api.anthropic.com. Your music, history and profile stay here. Requests may incur provider charges; max 256 output tokens and 10 requests/day. Set a spending limit with your provider.",
+                        "Reservation: ${usd(model.reservationNanoUsd)}\nToday counted: ${usd(cloudState.usage.todayNanoUsd)} / ${usd(cloudState.limits.dailyNanoUsd)}\nMonth counted: ${usd(cloudState.usage.monthNanoUsd)} / ${usd(cloudState.limits.monthlyNanoUsd)}",
+                        color = Sage,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                    Text(
+                        "Valid usage reduces the reservation; a timeout or cancellation keeps it. Rates reviewed ${IntentModels.reviewedOn}. Provider charges, taxes and usage elsewhere can differ; use provider billing controls too. Review every returned setting before playing.",
                         color = Muted,
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(consent, { consent = it })
+                        Checkbox(consent, { consent = it }, enabled = !busy)
                         Text(
                             "I consent to sending this prompt.",
                             style = MaterialTheme.typography.bodyMedium,
@@ -437,11 +477,12 @@ private fun AgentDialog(vm: MainViewModel, busy: Boolean, onDismiss: () -> Unit)
                         color = Muted,
                         style = MaterialTheme.typography.bodyMedium,
                     )
+                error?.let { Text(it, color = Coral) }
             }
         },
         confirmButton = {
             TextButton(
-                { vm.parseIntent(text, cloud, model, consent) },
+                { vm.parseIntent(text, cloud, modelId, consent) },
                 enabled = !busy && text.isNotBlank() && (!cloud || (consent && keySaved)),
             ) {
                 Text(if (busy) "Parsing…" else "Apply to Compass")

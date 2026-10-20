@@ -54,7 +54,11 @@ class MusicBrainzClient(
             "Enter a contact email or HTTPS project/support URL for the MusicBrainz User-Agent"
         }
         return gate.execute {
-            val response = transport.get(url, "Songlane/0.2.0 (${contact.trim()})")
+            val response =
+                transport.get(
+                    url,
+                    "Songlane/${app.songlane.BuildConfig.VERSION_NAME} (${contact.trim()})",
+                )
             when (response.status) {
                 200 ->
                     response.body.also {

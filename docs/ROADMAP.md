@@ -6,13 +6,15 @@ Local file/folder/MediaStore import, metadata reading, library search, album/art
 
 Version 0.2 adds opt-in MusicBrainz recording search/lookup, explicit identity confirmation, attributed core-data credits and shared-contributor route edges. It also adds local ReplayGain tag reading and stream-bound PCM gain processing with track/album modes and peak-based boost limits. Taste Passport now restores custom labels, uses indexed ambiguous-match detection, and merges repeated playlist imports without duplication. Independent song edits preserve newly linked metadata and lyrics.
 
+Version 0.3 adds Anthropic/OpenAI intent adapters, reviewed model choices, independent provider keys with authenticated encryption/migration, a transactional USD reservation ledger, usage/host previews, timeout/cancel controls and strict intent/receipt validation. Corrupted accounting disables cloud requests while local operation continues. Rates expire until an app update reviews them. This verifies local admission/accounting, not a provider invoice guarantee or paid account entitlement.
+
 ## Release gates that require evidence
 
 Debug build/unit/instrumented/lint results are tracked separately in VALIDATION.md. Before public production distribution: signed release/key ownership, dependency license audit, physical-device audio focus/Bluetooth/headphone tests, two-device/OS accessibility and performance testing, TalkBack walkthrough, OEM battery behavior, permission-revocation tests, privacy/security review, naming clearance, real listener research and store declarations. No claim that these gates have passed is made.
 
 ## Remaining blueprint P1 work
 
-Tested crossfade, broader BYOK providers/model adapters and a verified currency-based budget mechanism remain. ReplayGain uses reported local tags rather than measuring loudness; a missing tag or unsupported stream identity leaves the original level. Rescan/re-add files imported by older versions to index their gain tags. MusicBrainz uses only selected CC0 core fields and confirmed identities; other provider integrations remain conditional. Embedded lyrics currently support uncompressed ID3v2.3/v2.4 USLT; other embedded lyric formats are not decoded. Android Auto browse/search exists through the standard media service; physical vehicle/DHU validation remains open. The optional agent currently parses intent; it is not an unrestricted autonomous agent.
+Tested crossfade and additional source/provider integrations remain. ReplayGain uses reported local tags rather than measuring loudness; a missing tag or unsupported stream identity leaves the original level. Rescan/re-add files imported by older versions to index their gain tags. MusicBrainz uses only selected CC0 core fields and confirmed identities; other provider integrations remain conditional. Embedded lyrics currently support uncompressed ID3v2.3/v2.4 USLT; other embedded lyric formats are not decoded. Android Auto browse/search exists through the standard media service; physical vehicle/DHU validation remains open. The optional agent currently parses intent; it is not an unrestricted autonomous agent. Real paid-provider parsing/quality and invoice reconciliation remain unverified; the tested local spending mechanism is documented in CLOUD_AGENT.md.
 
 ## Later blueprint P2/P3
 

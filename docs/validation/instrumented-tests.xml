@@ -1,60 +1,109 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<testsuites tests="22" failures="0" errors="0" skipped="0" time="29.95" timestamp="2026-10-20T12:29:00" hostname="localhost">
-  <testsuite name="app.songlane.AppFlowTest" tests="1" failures="0" errors="0" skipped="0" time="15.159" timestamp="2026-10-20T12:29:00" hostname="localhost">
+<testsuites tests="43" failures="0" errors="0" skipped="0" time="48.373" timestamp="2026-10-20T13:23:06" hostname="localhost">
+  <testsuite name="app.songlane.AppFlowTest" tests="1" failures="0" errors="0" skipped="0" time="19.949" timestamp="2026-10-20T13:23:06" hostname="localhost">
     <properties>
       <property name="device" value="Pixel_7a(AVD) - 14" />
       <property name="flavor" value="" />
       <property name="project" value=":app" />
     </properties>
-    <testcase name="demoLibraryPlaysAndCompassProducesValidatedRoute" classname="app.songlane.AppFlowTest" time="15.159" />
+    <testcase name="demoLibraryPlaysAndCompassProducesValidatedRoute" classname="app.songlane.AppFlowTest" time="19.949" />
   </testsuite>
-  <testsuite name="app.songlane.GainProcessorTest" tests="3" failures="0" errors="0" skipped="0" time="0.018" timestamp="2026-10-20T12:29:00" hostname="localhost">
+  <testsuite name="app.songlane.CloudIntentTest" tests="11" failures="0" errors="0" skipped="0" time="4.876" timestamp="2026-10-20T13:23:06" hostname="localhost">
     <properties>
       <property name="device" value="Pixel_7a(AVD) - 14" />
       <property name="flavor" value="" />
       <property name="project" value=":app" />
     </properties>
-    <testcase name="disablingGainRestoresOriginalSamplesAndMissingIdentityCannotReusePreviousGain" classname="app.songlane.GainProcessorTest" time="0.006" />
-    <testcase name="emptyPipelineInputDoesNotCopyTheSharedEmptyBufferOntoItself" classname="app.songlane.GainProcessorTest" time="0.005" />
-    <testcase name="streamIdentityChangesGainOnlyAfterOldPcmHasDrainedAndNewStreamFlushes" classname="app.songlane.GainProcessorTest" time="0.007" />
+    <testcase name="missingOrUnexpectedUsageAndModelPauseFurtherRequests" classname="app.songlane.CloudIntentTest" time="1.218" />
+    <testcase name="cancellationKeepsReservationAndCannotReturnALateIntent" classname="app.songlane.CloudIntentTest" time="0.262" />
+    <testcase name="httpErrorsAreSanitizedNotRetriedAndKeepTheirReservation" classname="app.songlane.CloudIntentTest" time="0.321" />
+    <testcase name="legacyAnthropicCiphertextMigratesWithoutExposingOrLosingIt" classname="app.songlane.CloudIntentTest" time="0.291" />
+    <testcase name="corruptCloudAccountingDisablesCloudButKeepsLocalParsingAndCanBeExplicitlyErased" classname="app.songlane.CloudIntentTest" time="0.421" />
+    <testcase name="missingConsentInvalidModelMissingKeyAndEmptyBudgetNeverDispatch" classname="app.songlane.CloudIntentTest" time="0.287" />
+    <testcase name="providerKeysAreIndependentAuthenticatedAndDeletionDoesNotResetUsage" classname="app.songlane.CloudIntentTest" time="0.269" />
+    <testcase name="timeoutRetainsCostAndDoesNotAutomaticallySendAnotherRequest" classname="app.songlane.CloudIntentTest" time="0.292" />
+    <testcase name="bothAdaptersSendOnlyChosenPromptAndUseTheirOwnKeysThenSettleUsage" classname="app.songlane.CloudIntentTest" time="0.32" />
+    <testcase name="truncatedOrUntrustedOutputCannotBecomeAnIntentButReportedTokensStillCount" classname="app.songlane.CloudIntentTest" time="0.444" />
+    <testcase name="invalidUsageReceiptsCannotRefundReservations" classname="app.songlane.CloudIntentTest" time="0.751" />
   </testsuite>
-  <testsuite name="app.songlane.MetadataClientTest" tests="4" failures="0" errors="0" skipped="0" time="0.084" timestamp="2026-10-20T12:29:00" hostname="localhost">
+  <testsuite name="app.songlane.CloudLedgerTest" tests="6" failures="0" errors="0" skipped="0" time="1.905" timestamp="2026-10-20T13:23:06" hostname="localhost">
     <properties>
       <property name="device" value="Pixel_7a(AVD) - 14" />
       <property name="flavor" value="" />
       <property name="project" value=":app" />
     </properties>
-    <testcase name="busyResponseDoesNotRetryAutomaticallyAndBlocksEarlyRetry" classname="app.songlane.MetadataClientTest" time="0.037" />
-    <testcase name="consentAndContactAreCheckedBeforeAnyNetworkRequest" classname="app.songlane.MetadataClientTest" time="0.005" />
-    <testcase name="searchUsesAnIdentifiedFixedEndpointAndLookupMustReturnTheChosenId" classname="app.songlane.MetadataClientTest" time="0.037" />
-    <testcase name="parserStoresOnlyCoreFieldsAndNoAudioUriOrSearchScore" classname="app.songlane.MetadataClientTest" time="0.005" />
+    <testcase name="utcDailyAndMonthlyWindowsAndDateRollbackAreEnforced" classname="app.songlane.CloudLedgerTest" time="0.165" />
+    <testcase name="settlementIsIdempotentAndLowerCeilingsNeverClearSpend" classname="app.songlane.CloudLedgerTest" time="0.223" />
+    <testcase name="unresolvedReservationSurvivesRecreationAndChangingProviderDoesNotResetBudget" classname="app.songlane.CloudLedgerTest" time="0.301" />
+    <testcase name="providerAnomalyHaltsRequestsWithoutClearingAccounting" classname="app.songlane.CloudLedgerTest" time="0.261" />
+    <testcase name="tenCallsStayLimitedEvenWhenReportedCostIsZero" classname="app.songlane.CloudLedgerTest" time="0.514" />
+    <testcase name="concurrentInstancesCannotOverbookTheSameCeiling" classname="app.songlane.CloudLedgerTest" time="0.441" />
   </testsuite>
-  <testsuite name="app.songlane.PlaybackTest" tests="2" failures="0" errors="0" skipped="0" time="3.694" timestamp="2026-10-20T12:29:00" hostname="localhost">
+  <testsuite name="app.songlane.CloudTransportTest" tests="3" failures="0" errors="0" skipped="0" time="0.086" timestamp="2026-10-20T13:23:06" hostname="localhost">
     <properties>
       <property name="device" value="Pixel_7a(AVD) - 14" />
       <property name="flavor" value="" />
       <property name="project" value=":app" />
     </properties>
-    <testcase name="mediaBrowserListsLocalLibraryAndPlaybackQueueCanBeMutatedAndPersisted" classname="app.songlane.PlaybackTest" time="1.784" />
-    <testcase name="localTaggedAudioUsesItsGainAndTheNextUntaggedSongRestoresOriginalLevel" classname="app.songlane.PlaybackTest" time="1.91" />
+    <testcase name="cancelDisconnectsAReadingConnectionAndDoesNotWaitForReadTimeout" classname="app.songlane.CloudTransportTest" time="0.005" />
+    <testcase name="providerCredentialsStayInTheirHeadersAndRedirectsAreDisabled" classname="app.songlane.CloudTransportTest" time="0.036" />
+    <testcase name="errorBodiesAreNotReadAndOversizedSuccessBodiesAreRejected" classname="app.songlane.CloudTransportTest" time="0.045" />
   </testsuite>
-  <testsuite name="app.songlane.StorageTest" tests="12" failures="0" errors="0" skipped="0" time="8.894" timestamp="2026-10-20T12:29:00" hostname="localhost">
+  <testsuite name="app.songlane.CloudUiTest" tests="1" failures="0" errors="0" skipped="0" time="11.92" timestamp="2026-10-20T13:23:06" hostname="localhost">
     <properties>
       <property name="device" value="Pixel_7a(AVD) - 14" />
       <property name="flavor" value="" />
       <property name="project" value=":app" />
     </properties>
-    <testcase name="libraryAndQueueSurviveRepositoryRecreation" classname="app.songlane.StorageTest" time="0.223" />
-    <testcase name="privacySettingAtomicallyClearsQueueAndRejectsStaleSnapshots" classname="app.songlane.StorageTest" time="0.135" />
-    <testcase name="ambiguousRecordingsAndDuplicateImportIdsNeverSilentlyMerge" classname="app.songlane.StorageTest" time="0.13" />
-    <testcase name="deletionKeepsAudioButRemovesReferences" classname="app.songlane.StorageTest" time="0.135" />
-    <testcase name="indexedPassportMatchingHandlesARepresentativeLargerCollection" classname="app.songlane.StorageTest" time="7.473" />
-    <testcase name="privateSessionsAndPausedHistoryDoNotRecord" classname="app.songlane.StorageTest" time="0.135" />
-    <testcase name="independentSongEditsKeepNewRecordingLinksAndLyricsInsteadOfReplacingStaleObjects" classname="app.songlane.StorageTest" time="0.099" />
-    <testcase name="unsupportedAndOversizedImportsFailWithoutMutatingState" classname="app.songlane.StorageTest" time="0.106" />
-    <testcase name="keystoreEncryptsRoundTripsAndDeletesKey" classname="app.songlane.StorageTest" time="0.158" />
-    <testcase name="repeatedPassportImportMergesPlaylistsAndRestoresUserTagsWithoutTrustingExternalLinks" classname="app.songlane.StorageTest" time="0.105" />
-    <testcase name="recordingLinksAndGainRoundTripButTheContactIsNeverExported" classname="app.songlane.StorageTest" time="0.124" />
-    <testcase name="exportedPassportExcludesUrisAndKeysAndMergesOnlyKnownTracks" classname="app.songlane.StorageTest" time="0.071" />
+    <testcase name="cloudOptionsManageIndependentKeysAndCeilingsAndFullDeletionRestoresLocalDefaults" classname="app.songlane.CloudUiTest" time="11.92" />
+  </testsuite>
+  <testsuite name="app.songlane.GainProcessorTest" tests="3" failures="0" errors="0" skipped="0" time="0.035" timestamp="2026-10-20T13:23:06" hostname="localhost">
+    <properties>
+      <property name="device" value="Pixel_7a(AVD) - 14" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="disablingGainRestoresOriginalSamplesAndMissingIdentityCannotReusePreviousGain" classname="app.songlane.GainProcessorTest" time="0.027" />
+    <testcase name="emptyPipelineInputDoesNotCopyTheSharedEmptyBufferOntoItself" classname="app.songlane.GainProcessorTest" time="0.004" />
+    <testcase name="streamIdentityChangesGainOnlyAfterOldPcmHasDrainedAndNewStreamFlushes" classname="app.songlane.GainProcessorTest" time="0.004" />
+  </testsuite>
+  <testsuite name="app.songlane.MetadataClientTest" tests="4" failures="0" errors="0" skipped="0" time="0.123" timestamp="2026-10-20T13:23:06" hostname="localhost">
+    <properties>
+      <property name="device" value="Pixel_7a(AVD) - 14" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="busyResponseDoesNotRetryAutomaticallyAndBlocksEarlyRetry" classname="app.songlane.MetadataClientTest" time="0.006" />
+    <testcase name="consentAndContactAreCheckedBeforeAnyNetworkRequest" classname="app.songlane.MetadataClientTest" time="0.004" />
+    <testcase name="searchUsesAnIdentifiedFixedEndpointAndLookupMustReturnTheChosenId" classname="app.songlane.MetadataClientTest" time="0.077" />
+    <testcase name="parserStoresOnlyCoreFieldsAndNoAudioUriOrSearchScore" classname="app.songlane.MetadataClientTest" time="0.036" />
+  </testsuite>
+  <testsuite name="app.songlane.PlaybackTest" tests="2" failures="0" errors="0" skipped="0" time="2.993" timestamp="2026-10-20T13:23:06" hostname="localhost">
+    <properties>
+      <property name="device" value="Pixel_7a(AVD) - 14" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="mediaBrowserListsLocalLibraryAndPlaybackQueueCanBeMutatedAndPersisted" classname="app.songlane.PlaybackTest" time="1.787" />
+    <testcase name="localTaggedAudioUsesItsGainAndTheNextUntaggedSongRestoresOriginalLevel" classname="app.songlane.PlaybackTest" time="1.206" />
+  </testsuite>
+  <testsuite name="app.songlane.StorageTest" tests="12" failures="0" errors="0" skipped="0" time="4.874" timestamp="2026-10-20T13:23:06" hostname="localhost">
+    <properties>
+      <property name="device" value="Pixel_7a(AVD) - 14" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="libraryAndQueueSurviveRepositoryRecreation" classname="app.songlane.StorageTest" time="0.214" />
+    <testcase name="privacySettingAtomicallyClearsQueueAndRejectsStaleSnapshots" classname="app.songlane.StorageTest" time="0.107" />
+    <testcase name="ambiguousRecordingsAndDuplicateImportIdsNeverSilentlyMerge" classname="app.songlane.StorageTest" time="0.136" />
+    <testcase name="deletionKeepsAudioButRemovesReferences" classname="app.songlane.StorageTest" time="0.106" />
+    <testcase name="indexedPassportMatchingHandlesARepresentativeLargerCollection" classname="app.songlane.StorageTest" time="3.872" />
+    <testcase name="privateSessionsAndPausedHistoryDoNotRecord" classname="app.songlane.StorageTest" time="0.054" />
+    <testcase name="independentSongEditsKeepNewRecordingLinksAndLyricsInsteadOfReplacingStaleObjects" classname="app.songlane.StorageTest" time="0.029" />
+    <testcase name="unsupportedAndOversizedImportsFailWithoutMutatingState" classname="app.songlane.StorageTest" time="0.134" />
+    <testcase name="keystoreEncryptsRoundTripsAndDeletesKey" classname="app.songlane.StorageTest" time="0.104" />
+    <testcase name="repeatedPassportImportMergesPlaylistsAndRestoresUserTagsWithoutTrustingExternalLinks" classname="app.songlane.StorageTest" time="0.056" />
+    <testcase name="recordingLinksAndGainRoundTripButTheContactIsNeverExported" classname="app.songlane.StorageTest" time="0.032" />
+    <testcase name="exportedPassportExcludesUrisAndKeysAndMergesOnlyKnownTracks" classname="app.songlane.StorageTest" time="0.03" />
   </testsuite>
 </testsuites>

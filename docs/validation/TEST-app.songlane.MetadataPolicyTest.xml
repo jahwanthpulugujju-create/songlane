@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="app.songlane.MetadataPolicyTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-20T12:28:18.292Z" hostname="DESKTOP-OQP14F8" time="0.12">
+<testsuite name="app.songlane.MetadataPolicyTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-20T13:22:05.600Z" hostname="DESKTOP-OQP14F8" time="0.079">
   <properties/>
-  <testcase name="rateGateSerializesConcurrentCallsAndMaintainsSpacingAfterFailures" classname="app.songlane.MetadataPolicyTest" time="0.1"/>
+  <testcase name="rateGateSerializesConcurrentCallsAndMaintainsSpacingAfterFailures" classname="app.songlane.MetadataPolicyTest" time="0.066"/>
   <testcase name="confirmedCoreMetadataCreatesAnAttributedRouteEdge" classname="app.songlane.MetadataPolicyTest" time="0.002"/>
-  <testcase name="luceneQueriesQuoteUserTitlesAndDoNotExposeExtraFields" classname="app.songlane.MetadataPolicyTest" time="0.006"/>
+  <testcase name="luceneQueriesQuoteUserTitlesAndDoNotExposeExtraFields" classname="app.songlane.MetadataPolicyTest" time="0.004"/>
   <testcase name="externalSourceLinksCannotContainInjectedPathsOrSchemes" classname="app.songlane.MetadataPolicyTest" time="0.001"/>
   <testcase name="contributorConnectionsRequireBothRecordingIdentitiesToBeConfirmed" classname="app.songlane.MetadataPolicyTest" time="0.001"/>
-  <testcase name="contactMustBeAContactAddressAndCannotInjectHeaders" classname="app.songlane.MetadataPolicyTest" time="0.001"/>
-  <testcase name="serverCooldownRejectsRequestsUntilRetryWindowEnds" classname="app.songlane.MetadataPolicyTest" time="0.009"/>
+  <testcase name="contactMustBeAContactAddressAndCannotInjectHeaders" classname="app.songlane.MetadataPolicyTest" time="0.0"/>
+  <testcase name="serverCooldownRejectsRequestsUntilRetryWindowEnds" classname="app.songlane.MetadataPolicyTest" time="0.005"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

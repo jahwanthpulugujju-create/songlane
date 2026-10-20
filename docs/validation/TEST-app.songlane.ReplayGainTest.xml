@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="app.songlane.ReplayGainTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-20T12:28:18.415Z" hostname="DESKTOP-OQP14F8" time="0.013">
+<testsuite name="app.songlane.ReplayGainTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-20T13:22:05.681Z" hostname="DESKTOP-OQP14F8" time="0.008">
   <properties/>
-  <testcase name="metadataAcceptsOnlyFiniteBoundedGainAndPeakValues" classname="app.songlane.ReplayGainTest" time="0.003"/>
+  <testcase name="metadataAcceptsOnlyFiniteBoundedGainAndPeakValues" classname="app.songlane.ReplayGainTest" time="0.001"/>
   <testcase name="albumModeFallsBackToSongAndPeakLimitsPositiveGain" classname="app.songlane.ReplayGainTest" time="0.001"/>
-  <testcase name="pcm16ScalesBothChannelsConsumesInputAndSaturatesWithoutWrap" classname="app.songlane.ReplayGainTest" time="0.002"/>
-  <testcase name="readsId3VersionsAndUtf16Descriptions" classname="app.songlane.ReplayGainTest" time="0.001"/>
-  <testcase name="readsOggVorbisAndOpusCommentsWithoutInferringR128Values" classname="app.songlane.ReplayGainTest" time="0.0"/>
+  <testcase name="pcm16ScalesBothChannelsConsumesInputAndSaturatesWithoutWrap" classname="app.songlane.ReplayGainTest" time="0.001"/>
+  <testcase name="readsId3VersionsAndUtf16Descriptions" classname="app.songlane.ReplayGainTest" time="0.002"/>
+  <testcase name="readsOggVorbisAndOpusCommentsWithoutInferringR128Values" classname="app.songlane.ReplayGainTest" time="0.001"/>
   <testcase name="offMissingTagsAndUnknownPositivePeakKeepUnityGain" classname="app.songlane.ReplayGainTest" time="0.0"/>
-  <testcase name="unityIsByteExactAndFloatProcessingBoundsInvalidSamples" classname="app.songlane.ReplayGainTest" time="0.002"/>
+  <testcase name="unityIsByteExactAndFloatProcessingBoundsInvalidSamples" classname="app.songlane.ReplayGainTest" time="0.001"/>
   <testcase name="readsWaveId3AndRejectsTruncatedOversizedOrCompressedTags" classname="app.songlane.ReplayGainTest" time="0.001"/>
   <testcase name="readsFlacVorbisCommentsAndSkipsUnrelatedBlocks" classname="app.songlane.ReplayGainTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>

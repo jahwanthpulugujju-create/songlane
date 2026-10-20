@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="app.songlane.CloudPolicyTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-20T13:22:05.229Z" hostname="DESKTOP-OQP14F8" time="0.031">
+  <properties/>
+  <testcase name="reviewedModelsAndDatesCannotSilentlyAcceptArbitraryPricing" classname="app.songlane.CloudPolicyTest" time="0.027"/>
+  <testcase name="zeroCeilingsAreAllowedButUnsupportedTimeoutsAndAmountsAreRejected" classname="app.songlane.CloudPolicyTest" time="0.0"/>
+  <testcase name="reservationsUseFullContextAndBoundedOutputWithIntegerMoney" classname="app.songlane.CloudPolicyTest" time="0.0"/>
+  <testcase name="currencyParsingRejectsExponentsSignsRoundingAndLocaleAmbiguity" classname="app.songlane.CloudPolicyTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

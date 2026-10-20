@@ -5,8 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import app.songlane.agent.AiProvider
 import app.songlane.agent.CloudIntentParser
+import app.songlane.agent.CloudLimits
 import app.songlane.agent.KeyVault
+import app.songlane.agent.parseUsd
 import app.songlane.data.AudioImporter
 import app.songlane.data.MusicBrainzClient
 import app.songlane.data.validMetadataContact
@@ -16,6 +19,7 @@ import app.songlane.playback.PlaybackService
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,9 +41,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val busy = mutableBusy.asStateFlow()
     val route = MutableStateFlow<DiscoveryRoute?>(null)
     val parsedIntent = MutableStateFlow<SessionIntent?>(null)
-    val keySaved = MutableStateFlow(vault.exists())
+    val savedProviders = MutableStateFlow(AiProvider.entries.filter { vault.exists(it) }.toSet())
+    private var intentJob: Job? = null
     val sleepDeadline = PlaybackService.sleepDeadline
     val playbackGain = PlaybackService.gainState
+
+    init {
+        viewModelScope.coroutineContext[Job]?.invokeOnCompletion { cloud.close() }
+    }
+
     val lastError = MutableStateFlow<String?>(null)
     private val notices = Channel<String>(Channel.BUFFERED)
     val messages = notices.receiveAsFlow()
@@ -53,6 +63,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             lastError.value = null
             runCatching { block() }
                 .onFailure {
+                    if (it is CancellationException) throw it
                     lastError.value = it.message ?: "Something went wrong. Try again."
                     notify(lastError.value!!)
                 }
@@ -297,26 +308,48 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun parseIntent(text: String, cloudEnabled: Boolean, model: String, consent: Boolean) = action {
-        mutableBusy.value = true
-        try {
-            parsedIntent.value =
-                if (cloudEnabled) cloud.parse(text, model, consent) else SessionDirector.parse(text)
-        } finally {
-            mutableBusy.value = false
+    fun parseIntent(text: String, cloudEnabled: Boolean, model: String, consent: Boolean) {
+        if (intentJob?.isActive == true) return
+        intentJob = viewModelScope.launch {
+            lastError.value = null
+            mutableBusy.value = true
+            try {
+                parsedIntent.value =
+                    if (cloudEnabled) cloud.parse(text, model, consent)
+                    else SessionDirector.parse(text)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                lastError.value = e.message ?: "Intent parsing failed. Use local mode."
+            } finally {
+                mutableBusy.value = false
+            }
         }
     }
 
-    fun saveKey(value: String) = action {
-        withContext(Dispatchers.IO) { vault.save(value) }
-        keySaved.value = true
-        notify("API key stored with Android Keystore encryption")
+    fun cancelIntent() {
+        intentJob?.cancel()
     }
 
-    fun deleteKey() = action {
-        withContext(Dispatchers.IO) { vault.delete() }
-        keySaved.value = false
+    fun saveKey(value: String, provider: AiProvider) = action {
+        intentJob?.cancelAndJoin()
+        withContext(Dispatchers.IO) { vault.save(value, provider) }
+        savedProviders.value = AiProvider.entries.filter { vault.exists(it) }.toSet()
+        notify(
+            "${provider.label} key encrypted locally. Access is checked on your first consented request."
+        )
+    }
+
+    fun deleteKey(provider: AiProvider) = action {
+        intentJob?.cancelAndJoin()
+        withContext(Dispatchers.IO) { vault.delete(provider) }
+        savedProviders.value = AiProvider.entries.filter { vault.exists(it) }.toSet()
         notify("Local key deleted. Revoke it with your provider if needed.")
+    }
+
+    fun configureCloud(daily: String, monthly: String, timeout: Int) = action {
+        cloud.configure(CloudLimits(parseUsd(daily), parseUsd(monthly), timeout))
+        notify("Cloud ceilings saved. Existing usage and reservations remain counted.")
     }
 
     fun sleep(minutes: Int) {
@@ -364,6 +397,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun eraseAll() = action {
         closeMetadata()
+        intentJob?.cancelAndJoin()
         playback.clear()
         sleep(0)
         val app = getApplication<Application>()
@@ -376,8 +410,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         repo.deleteAll()
-        withContext(Dispatchers.IO) { vault.delete() }
-        keySaved.value = false
+        withContext(Dispatchers.IO) { vault.deleteAll() }
+        cloud.erase()
+        savedProviders.value = emptySet()
         route.value = null
         parsedIntent.value = null
         app.getSharedPreferences("agent-limits", android.content.Context.MODE_PRIVATE)
@@ -390,7 +425,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 ?.filter { it.name.startsWith("demo-") }
                 ?.forEach { it.delete() }
         }
-        notify("Songlane data and local key deleted. Your original audio files are unchanged.")
+        notify("Songlane data and local keys deleted. Your original audio files are unchanged.")
     }
 
     override fun onCleared() {

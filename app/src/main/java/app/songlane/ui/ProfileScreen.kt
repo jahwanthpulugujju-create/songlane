@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
@@ -15,8 +14,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import app.songlane.MainViewModel
 import app.songlane.domain.*
@@ -183,8 +180,6 @@ fun SettingsScreen(
 ) {
     var clearHistory by remember { mutableStateOf(false) }
     var erase by remember { mutableStateOf(false) }
-    var key by remember { mutableStateOf("") }
-    val saved by vm.keySaved.collectAsState()
     val context = LocalContext.current
     var speed by
         rememberSaveable(state.settings.speed) { mutableFloatStateOf(state.settings.speed) }
@@ -363,40 +358,7 @@ fun SettingsScreen(
                 Icons.Rounded.AutoAwesome,
             )
             Spacer(Modifier.height(12.dp))
-            Text(
-                if (saved) "An encrypted Anthropic key is stored." else "No cloud key stored.",
-                color = if (saved) Sage else Muted,
-            )
-            OutlinedTextField(
-                key,
-                { key = it.take(512) },
-                Modifier.fillMaxWidth(),
-                label = { Text("Anthropic API key") },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions =
-                    KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        autoCorrectEnabled = false,
-                    ),
-            )
-            Row {
-                TextButton(
-                    {
-                        vm.saveKey(key.trim())
-                        key = ""
-                    },
-                    enabled = key.isNotBlank(),
-                ) {
-                    Text("Save key")
-                }
-                if (saved) TextButton(vm::deleteKey) { Text("Delete key") }
-            }
-            Text(
-                "Keys are encrypted with Android Keystore and excluded from backup/export. Cloud requests require per-session consent. Limit: 10 requests/day, 256 output tokens/request. These are usage limits, not a guaranteed currency cap; set billing limits with your provider.",
-                color = Muted,
-                style = MaterialTheme.typography.bodyMedium,
-            )
+            CloudSettingsSummary(vm)
         }
         item {
             SectionTitle("About Songlane")

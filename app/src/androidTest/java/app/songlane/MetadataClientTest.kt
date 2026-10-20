@@ -71,7 +71,10 @@ class MetadataClientTest {
             client.search("Fixture recording", "Fixture artist", "support@example.com", true)
         assertEquals(id, results.single().recordingId)
         assertTrue(seen.single().first.startsWith("https://musicbrainz.org/ws/2/recording/?query="))
-        assertEquals("Songlane/0.2.0 (support@example.com)", seen.single().second)
+        assertEquals(
+            "Songlane/${BuildConfig.VERSION_NAME} (support@example.com)",
+            seen.single().second,
+        )
         assertEquals(id, client.lookup(id, "support@example.com", true).recordingId)
         val wrong =
             MusicBrainzClient(
